@@ -22,26 +22,26 @@ const page = () => {
      </div>
 
      <div className='mt-[82px] '>
-      <h3 className='font-roboto text-white text-[32px] font-bold'>Download Now</h3>
-      <div className='flex gap-8 mt-[21px]'>
-        <div className='bg-[#202019] w-[232px] py-[9px] px-[17px] rounded-[10px] flex  items-center gap-4' >
-        <Image src={playstore} alt='logo'/>
-        <div >
-          <p className='text-white font-inter text-[12px] text-start '>Download on the</p>
-          <p className='text-white font-inter font-bold text-[16px] mt-1 '>Google Play Store</p>
-          
-        </div>
-      </div>
-      <div className='bg-[#202019] w-[232px] py-[9px] px-[17px] rounded-[10px] flex  items-center gap-4'>
-        <Image src={apple} alt='logo'/>
-        <div >
-          <p className='text-white font-inter text-[12px]  '>Download on the</p>
-          <p className='text-white font-inter font-bold text-[16px] mt-1 '>Apple Store</p>
-          
-        </div>
-      </div>
-      </div>
-     </div>
+                       <h3 className='font-roboto text-white text-[32px] font-bold'>Download Now</h3>
+                       <div className='flex gap-8 mt-[21px]'>
+                         <a href='' className='bg-[#202019] w-[232px] py-[9px] px-[17px] rounded-[10px] flex  items-center gap-4' >
+                         <Image src={playstore} alt='logo'/>
+                         <div >
+                           <p className='text-white font-inter text-[12px] text-start '>Download on the</p>
+                           <p className='text-white font-inter font-bold text-[16px] mt-1 '>Google Play Store</p>
+                           
+                         </div>
+                       </a>
+                       <a href="" className='bg-[#202019] w-[232px] py-[9px] px-[17px] rounded-[10px] flex  items-center gap-4'>
+                         <Image src={apple} alt='logo'/>
+                         <div >
+                           <p className='text-white font-inter text-[12px]  '>Download on the</p>
+                           <p className='text-white font-inter font-bold text-[16px] mt-1 '>Apple Store</p>
+                           
+                         </div>
+                       </a >
+                       </div>
+                      </div>
 
      <div className='mt-[42px]'>
       <h3 className='text-white text-[32px] font-roboto font-semibold'>

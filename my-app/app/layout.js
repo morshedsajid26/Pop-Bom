@@ -1,5 +1,6 @@
-import { Geist, Geist_Mono,Roboto, Inter } from "next/font/google";
+import { Geist, Geist_Mono,Roboto, Inter,Sora } from "next/font/google";
 import "./globals.css";
+import Footer from "./component/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,8 +16,13 @@ const roboto = Roboto({
  variable: "--font-roboto",
 subsets: ["latin"],
 }); 
-const intert = Inter({
+const inter = Inter({
  variable: "--font-inter",
+subsets: ["latin"],
+}); 
+
+const sora = Sora({
+ variable: "--font-sora",
 subsets: ["latin"],
 }); 
 
@@ -29,9 +35,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${roboto.variable} ${intert.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${roboto.variable} ${inter.variable} ${sora.variable} antialiased`}
       >
         {children}
+        <Footer/>
       </body>
     </html>
   );
