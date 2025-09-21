@@ -5,13 +5,12 @@ import logo from '../public/LOGO.png'
 import Container from './component/Container'
 import playstore from '../public/playstore.png'
 import apple from '../public/apple.png'
+import Story from './component/Story'
 
 const page = () => {
   return (
-    
-      
-
-     <div className='bg-black'>
+    <div>
+       <div className='bg-black'>
        <div className='bg-[url(/banner.png)] bg-cover bg-center bg-no-repeat  relative after:absolute after:h-full after:top-0 after:left-0 after:w-full after:bg-black/60 pt-[149px] pb-[85px] z-30 after:-z-30 '>
       <Navbar/>
      
@@ -54,6 +53,12 @@ const page = () => {
      </Container>
       </div>
      </div>
+
+     <Story/>
+
+
+     
+    </div>
       
     
   )
