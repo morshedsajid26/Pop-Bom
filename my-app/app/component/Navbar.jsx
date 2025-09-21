@@ -4,8 +4,8 @@ import Li from './Li'
 
 const Navbar = () => {
   return (
-    <div className='pt-[149px]'>
-        <Container className='w-[917px] bg-amber-700'>
+    <div className=''>
+        <Container className='w-[917px] '>
             <div className='flex justify-between'>
                 <Li liText='Home'/>
                 <Li liText='Our story'/>
