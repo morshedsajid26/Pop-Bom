@@ -11,8 +11,8 @@ import { AiOutlineLinkedin } from "react-icons/ai";
 
 const Footer = () => {
   return (
-    <div className='bg-black pt-[64px] pb-[60px]'>
-        <Container className='flex flex-col items-center justify-center text-center'>
+    <div className='bg-black pt-[64px] pb-[60px] border-t border-white'>
+        <Container className='flex flex-col items-center justify-center text-center '>
              <Image  src={logo} alt='logo'/>
             <div className='mt-[82px] '>
                   <h3 className='font-roboto text-white text-[32px] font-bold'>Download Now</h3>

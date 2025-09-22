@@ -7,6 +7,7 @@ import playstore from '../public/playstore.png'
 import apple from '../public/apple.png'
 import Story from './component/Story'
 import PopBoms from './component/PopBoms'
+import FAQ from './component/FAQ'
 
 const page = () => {
   return (
@@ -57,6 +58,7 @@ const page = () => {
 
      <Story/>
      <PopBoms/>
+     <FAQ/>
      
 
 
