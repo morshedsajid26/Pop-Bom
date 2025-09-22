@@ -10,7 +10,7 @@ const FAQ = () => {
     let [dropdown4, setDropdown4]=useState(false);
     let [dropdown5, setDropdown5]=useState(false);
   return (
-    <div className='pt-[35px] pb-[64px] bg-black '>
+    <div id='faq' className='pt-[35px] pb-[64px] bg-black '>
 
                 <div className='bg-[url(/contactbg.png)] bg-cover bg-center bg-no-repeat'>
 

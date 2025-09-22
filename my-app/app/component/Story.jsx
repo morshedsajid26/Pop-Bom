@@ -7,7 +7,7 @@ import story3 from '@/public/story3.png'
 
 const Story = () => {
   return (
-    <div className='pt-[64px] pb-[115px]'>
+    <div id='story' className='pt-[64px] pb-[115px]'>
         <Container className=''>
             <h3 className='py-[13.5px] px-[24.5px] bg-black text-white text-[32px] font-roboto font-bold rounded-full w-[182px] mx-auto'>Our story</h3>
 
