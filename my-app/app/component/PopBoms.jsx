@@ -8,7 +8,7 @@ import playSign from '@/public/playSign.png'
 
 const PopBoms = () => {
   return (
-    <div className='pt-[92px] pb-[128px]'>
+    <div id='popbom' className='pt-[92px] pb-[128px]'>
         <Container>
               <h3 className='py-[13.5px] px-[24.5px] bg-black text-white text-[32px] font-roboto font-bold rounded-full w-[381px] mx-auto text-center '>PopBom's</h3>
 

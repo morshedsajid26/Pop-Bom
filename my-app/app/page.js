@@ -8,6 +8,7 @@ import apple from '../public/apple.png'
 import Story from './component/Story'
 import PopBoms from './component/PopBoms'
 import FAQ from './component/FAQ'
+import Explosion from './component/Explosion'
 
 const page = () => {
   return (
@@ -58,6 +59,7 @@ const page = () => {
 
      <Story/>
      <PopBoms/>
+     <Explosion/>
      <FAQ/>
      
 

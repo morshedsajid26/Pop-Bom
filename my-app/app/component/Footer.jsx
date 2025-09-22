@@ -53,8 +53,8 @@ const Footer = () => {
 
                   <ul className='font-sora text-[14px] text-white/72 flex items-center gap-2 '>
                     <li><a href="">Contact Details</a></li>
-                    <li><a href="">Privacy policy</a></li>
-                    <li><a href="">Terms of use</a></li>
+                    <li><a href="/privacy">Privacy policy</a></li>
+                    <li><a href="/terms">Terms of use</a></li>
                   </ul>
                  </div>
         </Container>

@@ -10,7 +10,28 @@ const FAQ = () => {
     let [dropdown4, setDropdown4]=useState(false);
     let [dropdown5, setDropdown5]=useState(false);
   return (
-    <div className='bg-black pt-8 pb-[64px]'>
+    <div className='pt-[35px] pb-[64px] bg-black '>
+
+                <div className='bg-[url(/contactbg.png)] bg-cover bg-center bg-no-repeat'>
+
+                <Container className='py-[44.5px] flex justify-between items-center'>
+                    <div className='w-[395px]'>
+                    <p className='font-inter font-medium text-[16px] text-white'>Do you need help?</p>
+                    
+                    <p className='font-inter font-medium text-[16px] text-white/81 mt-2.5'>Reach out to us anytime for assistance with content postings, contractor inquiries, or technical support.</p>
+
+
+                </div>
+
+                <button className='font-bold font-inter text-[#0F3732] text-[16px] py-3 px-[64.5px] bg-white rounded-full'>Contact Us</button>
+                </Container>
+
+        </div>
+
+
+
+
+        <div className=' mt-8 '>
       <Container className='w-[1120px]'>
 
         <h3 className='py-[13.5px] px-[24.5px] bg-white text-black text-[32px] font-roboto font-bold rounded-full w-[246px] mx-auto text-center '>FAQ</h3>
@@ -73,6 +94,7 @@ const FAQ = () => {
 
         </div>
       </Container>
+    </div>
     </div>
   )
 }

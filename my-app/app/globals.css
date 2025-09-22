@@ -12,11 +12,12 @@
   --font-mono: var(--font-geist-mono);
   --font-roboto: var(--font-roboto);
   --font-inter: var(--font-inter);
-    --font-sora: var(--font-sora)
+    --font-sora: var(--font-sora);
+    --font-figtree: var(--font-figtree)
 
 }
 
-@media (prefers-color-scheme: white) {
+@media (prefers-color-scheme: light) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
