@@ -6,6 +6,7 @@ import Container from './component/Container'
 import playstore from '../public/playstore.png'
 import apple from '../public/apple.png'
 import Story from './component/Story'
+import PopBoms from './component/PopBoms'
 
 const page = () => {
   return (
@@ -55,6 +56,8 @@ const page = () => {
      </div>
 
      <Story/>
+     <PopBoms/>
+     
 
 
      
