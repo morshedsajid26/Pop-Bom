@@ -42,17 +42,6 @@ const Explosion = () => {
             </div>
 
 
-<div className='bg-gradient-to-b from-[#21E6A0] to-[#6DF844] w-[316px] rounded-[25px] px-[15px] text-center pt-[30px] pb-[73px] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
-                <div className='flex items-center justify-center gap-[15px]'>
-                    <Image src={explosion2}/>
-                    <p className='font-roboto font-bold text-[20px] ' >PopBom it </p>
-
-                </div>
-                <p className='text-[24px] font-roboto mt-[62px]'>Hit post and watch your 5-second PopBom explode across the feed
- 
-</p>
-
-            </div>
             
 
 
@@ -78,10 +67,23 @@ const Explosion = () => {
 
             </div>
 
-<Image className='absolute top-[84px] left-[327px]' src={line}/>
-<Image className='absolute top-[84px] right-[327px] rotate-90' src={line}/>
-<Image className='absolute bottom-[84px] left-[327px] rotate-90' src={line}/>
-<Image className='absolute bottom-[84px] right-[327px] ' src={line}/>
+            
+            <div className='bg-gradient-to-b from-[#21E6A0] to-[#6DF844] w-[316px] rounded-[25px] px-[15px] text-center pt-[30px] pb-[73px] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
+                <div className='flex items-center justify-center gap-[15px]'>
+                    <Image src={explosion2}/>
+                    <p className='font-roboto font-bold text-[20px] ' >PopBom it </p>
+
+                </div>
+                <p className='text-[24px] font-roboto mt-[62px]'>Hit post and watch your 5-second PopBom explode across the feed
+
+</p>
+
+            </div>
+            
+            <Image className='absolute top-[84px] left-[327px]' src={line}/>
+            <Image className='absolute top-[84px] right-[327px] rotate-90' src={line}/>
+            <Image className='absolute bottom-[84px] left-[327px] rotate-90' src={line}/>
+            <Image className='absolute bottom-[84px] right-[327px] ' src={line}/>
 
 
         </div>
