@@ -5,10 +5,11 @@ import logo from '../public/LOGO.png'
 import Container from './component/Container'
 import playstore from '../public/playstore.png'
 import apple from '../public/apple.png'
-import Story from './component/Story'
-import PopBoms from './component/PopBoms'
-import FAQ from './component/FAQ'
-import Explosion from './component/Explosion'
+import Story from './(landing page)/Story'
+import PopBoms from './(landing page)/PopBoms'
+import FAQ from './(landing page)/FAQ'
+import Explosion from './(landing page)/Explosion'
+import Footer from './component/Footer'
 
 const page = () => {
   return (
@@ -61,6 +62,7 @@ const page = () => {
      <PopBoms/>
      <Explosion/>
      <FAQ/>
+     <Footer/>
      
 
 
