@@ -23,9 +23,9 @@ const Success = () => {
       
 
 
-     <Link href='/' className='w-full'>
+     <Link href='/signin' className='w-full'>
      
-      <button className='bg-[#900616] text-white font-semibold text-xl w-full font-inter py-3 rounded-lg cursor-pointer mt-5'>
+      <button className='bg-gradient-to-r from-[#21E6A0] to-[#6DF844] text-white font-semibold text-xl w-full font-inter py-3 rounded-lg cursor-pointer mt-5'>
         Sign In
       </button>
      </Link> 

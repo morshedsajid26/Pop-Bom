@@ -31,7 +31,7 @@ const Password = ({
           value={value}
           onChange={onChange}
           placeholder={placeholder}
-          className={`w-full outline-none  py-3 px-4 text-[#5C5C5C]  font-inter text-[16px] placeholder-[#5C5C5C] border border-[#900616]  rounded ${inputClass}`}
+          className={`w-full outline-none  py-3 px-4 text-[#5C5C5C]  font-inter text-[16px] placeholder-[#5C5C5C]   rounded ${inputClass}`}
           aria-label={label || "password"}
           autoComplete={name === "password" ? "new-password" : "off"}
         />
@@ -41,7 +41,7 @@ const Password = ({
           onClick={() => setShowPass((s) => !s)}
           aria-pressed={showPass}
           aria-label={showPass ? "Hide password" : "Show password"}
-          className={`w-8 h-8 flex items-center justify-center absolute top-1/2 -translate-y-1/2 right-3 text-[#900616]  ${icon}`}
+          className={`w-8 h-8 flex items-center justify-center absolute top-1/2 -translate-y-1/2 right-3 text-[#21E6A0]  ${icon}`}
         >
           {showPass ? <IoEyeOutline className="w-5 h-5" /> : <FaRegEyeSlash className="w-5 h-5" />}
         </button>

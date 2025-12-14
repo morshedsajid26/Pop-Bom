@@ -20,12 +20,14 @@ const NewPass = () => {
           </p>
 
           <Password
+           inputClass="border border-[#21E6A0]"
             label="Password"
             placeholder="Enter your password"
             name={`password`}
           />
 
           <Password
+           inputClass="border border-[#21E6A0]"
             label="Confirm Password"
             placeholder="Enter your password again"
             name={`confirmPassword`}
@@ -33,7 +35,7 @@ const NewPass = () => {
           <Link href={`/success`} className="w-full">
             <button
               type="submit"
-              className="bg-[#900616] text-white w-full font-semibold font-inter  py-3 rounded-lg mt-5 cursor-pointer"
+              className="bg-gradient-to-r from-[#21E6A0] to-[#6DF844] text-white w-full font-semibold font-inter  py-3 rounded-lg mt-5 cursor-pointer"
             >
               Update Password
             </button>

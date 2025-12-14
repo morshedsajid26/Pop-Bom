@@ -51,7 +51,7 @@ const OTP = () => {
               onChange={(e) => handleChange(e, i)}
               onKeyDown={(e) => handleKeyDown(e, i)}
               value={otp[i]}
-              className="appearance-none w-[47px] h-[49px] border border-[#900616] rounded-[10px] text-center outline-none text-xl font-inter font-bold text-[#900616] "
+              className="appearance-none w-[47px] h-[49px] border border-[#21E6A0] rounded-[10px] text-center outline-none text-xl font-inter font-bold text-[#900616] "
             />
           ))}
         </div>
@@ -59,7 +59,7 @@ const OTP = () => {
         <Link href={`/newpassword`} className="w-full">
         <button
           type="submit"
-          className="w-full font-inter font-semibold text-[16px] bg-[#900616] text-white rounded py-3 hover:opacity-90 disabled:opacity-50 cursor-pointer"
+          className="w-full font-inter font-semibold text-[16px] bg-gradient-to-r from-[#21E6A0] to-[#6DF844] text-white rounded py-3 hover:opacity-90 disabled:opacity-50 cursor-pointer"
         >
           Verify
         </button>
@@ -70,7 +70,7 @@ const OTP = () => {
           You have not received the email?
           <a
             href="/forgotpassword"
-            className="text-[#900616] cursor-pointer underline m-2"
+            className="text-[#21E6A0] cursor-pointer underline m-2"
           >
             Resend
           </a>

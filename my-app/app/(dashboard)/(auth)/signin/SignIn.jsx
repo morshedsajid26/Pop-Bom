@@ -24,36 +24,36 @@ const SignIn = () => {
             label="Email Address"
             labelClass={`text-[#333333] text-[16px]`}
             placeholder=""
-            inputClass={`border-[#900616] border bg-transparent  text-[#5C5C5C] py-3 placeholder:text-[#5C5C5C] rounded`}
+            inputClass={`border-[#21E6A0] border bg-transparent  text-[#5C5C5C] py-3 placeholder:text-[#5C5C5C] rounded`}
           />
           <Password
-            inputClass="border"
+            inputClass="border border-[#21E6A0]"
             label="Password"
             // placeholder="Enter your password"
           />
 
           <div className="flex justify-between items-center  w-full ">
             <div className="flex items-center gap-2.5">
-              <input type="checkbox" className="w-4 h-4 accent-[#900616]" />
+              <input type="checkbox" className="w-4 h-4 accent-[#21E6A0]" />
               <p className="text-[#333333] font-inter ">Remember Password</p>
             </div>
             <Link href="/forgotpassword">
-              <p className="text-[#900616] font-inter ">Forgot Password?</p>
+              <p className="text-[#21E6A0] font-inter ">Forgot Password?</p>
             </Link>
           </div>
 
           <Link className="w-full" href="/dashboard">
-            <button className="bg-[#900616] text-white font-semibold text-xl w-full font-inter py-3 rounded-lg cursor-pointer mt-12">
+            <button className="bg-gradient-to-r from-[#21E6A0] to-[#6DF844] text-white font-semibold text-xl w-full font-inter py-3 rounded-lg cursor-pointer mt-12">
               Sign In
             </button>
           </Link>
 
-          <p className="font-inter ">
+          {/* <p className="font-inter ">
             Don’t have an account?
             <a href="/signup" className="font-bold">
               Sign up
             </a>
-          </p>
+          </p> */}
         </form>
       </main>
     </div>
