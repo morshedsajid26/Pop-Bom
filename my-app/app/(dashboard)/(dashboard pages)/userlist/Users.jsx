@@ -140,14 +140,15 @@ const Users = () => {
       const startIndex = (currentPage - 1) * itemsPerPage;
       const currentItems = baseOnTitle.slice(startIndex, startIndex + itemsPerPage);
     return (
-    <div className="bg-white p-6 rounded-2xl">
+      <>
       <Bredcumb />
+    <div className="bg-white  rounded-2xl mt-10">
 
-      <div className="mt-10">
+      
         <Table TableHeads={TableHeads} TableRows={currentItems} />
-      </div>
+     
 
-      <div>
+      <div className="py-5">
          <Pagination
         totalPages={totalPages}
         currentPage={currentPage}
@@ -155,6 +156,7 @@ const Users = () => {
       />
       </div>
     </div>
+      </>
   );
 };
 

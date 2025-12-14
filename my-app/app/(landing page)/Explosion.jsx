@@ -84,7 +84,7 @@ const Explosion = () => {
             <Image className='absolute top-[84px] right-[327px] rotate-90' src={line} alt='image'/>
             <Image className='absolute bottom-[84px] left-[327px] rotate-90' src={line} alt='image'/>
             <Image className='absolute bottom-[84px] right-[327px] ' src={line} alt='image'/>
- alt='image'
+
 
         </div>
 

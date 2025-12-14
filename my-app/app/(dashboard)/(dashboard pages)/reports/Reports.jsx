@@ -1,8 +1,22 @@
 "use client";
 import Bredcumb from "@/app/component/Bredcumb";
+import Dropdown from "@/app/component/Dropdown";
 import Pagination from "@/app/component/Pagination";
 import Table from "@/app/component/Table";
 import React, { useEffect, useState } from "react";
+
+let StatusDropDown = () => {
+  return (
+    <div className="">
+      <Dropdown
+              placeholder="Pending"
+              className={`w-[60%]  rounded-xl p-2 font-inter font-medium`}
+              options={["Solved", "Pending", "Issued"]}
+              inputClass={``}
+            />
+    </div>
+  )
+};
 
 const TableHeads = [
  
@@ -29,7 +43,44 @@ const TableRows = [
     usermail: "bNt6a@example.com",
     number: "+1 123-456-7890",
     description: "...",
-    status: "+1 123-456-7890",
+    status: <StatusDropDown/>,
+    date: "2023-01-01"
+  },
+
+  {
+    
+    username: "@sarah_m",
+    usermail: "bNt6a@example.com",
+    number: "+1 123-456-7890",
+    description: "...",
+    status: <StatusDropDown/>,
+    date: "2023-01-01"
+  },
+  {
+    
+    username: "@sarah_m",
+    usermail: "bNt6a@example.com",
+    number: "+1 123-456-7890",
+    description: "...",
+    status: <StatusDropDown/>,
+    date: "2023-01-01"
+  },
+  {
+    
+    username: "@sarah_m",
+    usermail: "bNt6a@example.com",
+    number: "+1 123-456-7890",
+    description: "...",
+    status: <StatusDropDown/>,
+    date: "2023-01-01"
+  },
+  {
+    
+    username: "@sarah_m",
+    usermail: "bNt6a@example.com",
+    number: "+1 123-456-7890",
+    description: "...",
+    status: <StatusDropDown/>,
     date: "2023-01-01"
   },
   
@@ -50,14 +101,60 @@ const Reports = () => {
       const startIndex = (currentPage - 1) * itemsPerPage;
       const currentItems = baseOnTitle.slice(startIndex, startIndex + itemsPerPage);
     return (
-    <div className="bg-white p-6 rounded-2xl">
-      <Bredcumb />
 
-      <div className="mt-10">
+      <>
+      <Bredcumb />
+      <div className="grid grid-cols-12 gap-7 mt-10">
+           <div className="bg-white px-10 pt-2 pb-10 col-span-4 rounded-2xl text-center ">
+          <div className="flex justify-end">
+            <Dropdown
+              placeholder="Today"
+              className={`w-[30%]  border   rounded-xl p-1 font-inter font-medium`}
+              options={["Today", "This Week", "This Month", "This Year", "All Time"]}
+              inputClass={``}
+            />
+          </div>
+          <p className="font-inter text-black text-xl ">New Ticket</p>
+          <p className="font-inter text-black mt-5 ">15</p>
+        </div>
+
+           <div className="bg-white px-10 pt-2 pb-10 col-span-4 rounded-2xl text-center ">
+          <div className="flex justify-end">
+            <Dropdown
+              placeholder="Today"
+              className={`w-[30%]  border   rounded-xl p-1 font-inter font-medium`}
+              options={["Today", "This Week", "This Month", "This Year", "All Time"]}
+              inputClass={``}
+            />
+          </div>
+          <p className="font-inter text-black text-xl ">On Progress</p>
+          <p className="font-inter text-black mt-5 ">15</p>
+        </div>
+
+        <div className="bg-white px-10 pt-2 pb-10 col-span-4 rounded-2xl text-center ">
+          <div className="flex justify-end">
+            <Dropdown
+              placeholder="Today"
+              className={`w-[30%]  border   rounded-xl p-1 font-inter font-medium`}
+              options={["Today", "This Week", "This Month", "This Year", "All Time"]}
+              inputClass={``}
+            />
+          </div>
+          <p className="font-inter text-black text-xl ">Completed</p>
+          <p className="font-inter text-black mt-5 ">15</p>
+        </div>
+
+        
+      </div>
+    <div className="bg-white rounded-2xl mt-7 ">
+
+      
+
+      <div className="">
         <Table TableHeads={TableHeads} TableRows={currentItems} />
       </div>
 
-      <div>
+      <div className="py-5">
          <Pagination
         totalPages={totalPages}
         currentPage={currentPage}
@@ -65,6 +162,7 @@ const Reports = () => {
       />
       </div>
     </div>
+    </>
   );
 };
 
