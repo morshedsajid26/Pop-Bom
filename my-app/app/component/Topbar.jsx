@@ -11,7 +11,7 @@ const Topbar = () => {
     <div className=" flex items-center justify-end gap-10 bg-white p-2  ">
       
 
-      <Link href={`/account`}>
+      <Link href={`/settings`}>
         <Image src={Avatar} alt="profile" />
         {/* <Image src={logo} alt="logo" /> */}
       </Link>
