@@ -9,6 +9,7 @@ const layout = ({children}) => {
 
     const nav = [
       { name: "Profile", link: "/settings" },
+      { name: "Change Password", link: "/settings/changepass" },
        { name: "API Keys", link: "/settings/api" },
      
     ];
@@ -16,7 +17,7 @@ const layout = ({children}) => {
     <div>
       
 
-        <ul className="flex  gap-6 border-b border-black/20  ">
+        <ul className="flex  gap-7 border-b border-black/20  ">
           {nav.map((item, index) => {
             const isActive = pathname === item.link;
             return (
