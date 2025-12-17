@@ -5,6 +5,13 @@ const ChangePass = () => {
   return (
    <div className='w-[480px] flex flex-col items-center mx-auto gap-8 mt-10 '>
 
+     <Password
+      inputClass='border border-[#21E6A0]'
+      label={`Old Password`}
+      labelClass={`text-[#000000] text-xl`}
+      icon='text-[#000000]'
+      />
+
       <Password
       inputClass='border border-[#21E6A0]'
       label={`New Password`}
