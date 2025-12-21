@@ -2,161 +2,97 @@
 import Bredcumb from "@/app/component/Bredcumb";
 import Pagination from "@/app/component/Pagination";
 import Table from "@/app/component/Table";
+import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
+
 const TableHeads = [
-  {
-    Title: "Name",
-    key: "name",
-    width: "20%",
-  },
-
-  {
-    Title: "Username",
-    key: "username",
-    width: "20%",
-  },
-
+  // { Title: "Name", key: "name", width: "20%" },
+  { Title: "Username", key: "username", width: "20%" },
   { Title: "User Mail", key: "usermail", width: "20%" },
-  { Title: "Contact Number", key: "number", width: "20%" },
+  // { Title: "Contact Number", key: "number", width: "20%" },
   { Title: "Created Date", key: "created_date", width: "20%" },
- 
 ];
-
-// ROWS
-const TableRows = [
-  {
-    name: "Sarah Martinez",
-    username: "@sarah_m",
-    usermail: "bNt6a@example.com",
-    number: "+1 123-456-7890",
-    created_date: "2023-01-01",
-  },
-  {
-    name: "Sarah Martinez",
-    username: "@sarah_m",
-    usermail: "bNt6a@example.com",
-    number: "+1 123-456-7890",
-    created_date: "2023-01-01",
-  },
-  {
-    name: "Sarah Martinez",
-    username: "@sarah_m",
-    usermail: "bNt6a@example.com",
-    number: "+1 123-456-7890",
-    created_date: "2023-01-01",
-  },
-  {
-    name: "Sarah Martinez",
-    username: "@sarah_m",
-    usermail: "bNt6a@example.com",
-    number: "+1 123-456-7890",
-    created_date: "2023-01-01",
-  },
-  {
-    name: "Sarah Martinez",
-    username: "@sarah_m",
-    usermail: "bNt6a@example.com",
-    number: "+1 123-456-7890",
-    created_date: "2023-01-01",
-  },
-  {
-    name: "Sarah Martinez",
-    username: "@sarah_m",
-    usermail: "bNt6a@example.com",
-    number: "+1 123-456-7890",
-    created_date: "2023-01-01",
-  },
-  {
-    name: "Sarah Martinez",
-    username: "@sarah_m",
-    usermail: "bNt6a@example.com",
-    number: "+1 123-456-7890",
-    created_date: "2023-01-01",
-  },
-  {
-    name: "Sarah Martinez",
-    username: "@sarah_m",
-    usermail: "bNt6a@example.com",
-    number: "+1 123-456-7890",
-    created_date: "2023-01-01",
-  },
-  {
-    name: "Sarah Martinez",
-    username: "@sarah_m",
-    usermail: "bNt6a@example.com",
-    number: "+1 123-456-7890",
-    created_date: "2023-01-01",
-  },
-  {
-    name: "Sarah Martinez",
-    username: "@sarah_m",
-    usermail: "bNt6a@example.com",
-    number: "+1 123-456-7890",
-    created_date: "2023-01-01",
-  },
-  {
-    name: "Sarah Martinez",
-    username: "@sarah_m",
-    usermail: "bNt6a@example.com",
-    number: "+1 123-456-7890",
-    created_date: "2023-01-01",
-  },
-  {
-    name: "Sarah Martinez",
-    username: "@sarah_m",
-    usermail: "bNt6a@example.com",
-    number: "+1 123-456-7890",
-    created_date: "2023-01-01",
-  },
-  {
-    name: "Sarah Martinez",
-    username: "@sarah_m",
-    usermail: "bNt6a@example.com",
-    number: "+1 123-456-7890",
-    created_date: "2023-01-01",
-  },
-  {
-    name: "Sarah Martinez",
-    username: "@sarah_m",
-    usermail: "bNt6a@example.com",
-    number: "+1 123-456-7890",
-    created_date: "2023-01-01",
-  },
- 
-];
-
 
 const Users = () => {
-    const [baseOnTitle, setBaseOnTitle] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1);
-     // Set data for pagination
+  const [users, setUsers] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+
+  // 🔹 Fetch users
   useEffect(() => {
-    setBaseOnTitle(TableRows);
+    const fetchUsers = async () => {
+  try {
+    setLoading(true);
+
+    // const token = Cookies.get("accessToken");
+
+    const res = await fetch(
+      "http://172.252.13.97:5000/api/admin/users", 
+      {
+        credentials: "include",
+        method: "GET",
+        // headers: {
+        //   "Content-Type": "application/json",
+        //   Authorization: `Bearer ${token}`,
+        // },
+      }
+    );
+
+    // const result = await res.json();
+    const result = await res.json();
+
+    if (!res.ok) {
+      throw new Error(result.message || "Failed to fetch users");
+    }
+    
+
+    const formattedData = result.data.map((user) => ({
+      // name: user.name,
+      username: `@${user.username}`,
+      usermail: user.email,
+      // number: user.phone,
+      created_date: user.createdAt?.split("T")[0],
+    }));
+
+    setUsers(formattedData);
+  } catch (error) {
+    console.error("User fetch error:", error.message);
+  } finally {
+    setLoading(false);
+  }
+};
+
+    fetchUsers();
   }, []);
 
-    // Pagination setup
-      const itemsPerPage = 10;
-      const totalPages = Math.ceil(baseOnTitle.length / itemsPerPage);
-      const startIndex = (currentPage - 1) * itemsPerPage;
-      const currentItems = baseOnTitle.slice(startIndex, startIndex + itemsPerPage);
-    return (
-      <>
+  // Pagination
+  const itemsPerPage = 10;
+  const totalPages = Math.ceil(users.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentItems = users.slice(startIndex, startIndex + itemsPerPage);
+
+  return (
+    <>
       <Bredcumb />
-    <div className="bg-white  rounded-2xl mt-10">
 
-      
-        <Table TableHeads={TableHeads} TableRows={currentItems} />
-     
+      <div className="bg-white rounded-2xl mt-10">
+        {loading ? (
+          <div className="py-10 text-center text-gray-500">
+            Loading users...
+          </div>
+        ) : (
+          <Table TableHeads={TableHeads} TableRows={currentItems} />
+        )}
 
-      <div className="py-5">
-         <Pagination
-        totalPages={totalPages}
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-      />
+        <div className="py-5">
+          <Pagination
+            totalPages={totalPages}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+          />
+        </div>
       </div>
-    </div>
-      </>
+    </>
   );
 };
 

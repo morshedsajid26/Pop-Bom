@@ -21,48 +21,67 @@ const SignIn = () => {
   const [isSuccess, setIsSuccess] = useState(false);
 
   const handleLogin = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    setLoading(true);
-    setMessage("");
-    setIsSuccess(false);
+  setLoading(true);
+  setMessage("");
+  setIsSuccess(false);
 
-    try {
-      const formData = new FormData();
-      formData.append("email", email);
-      formData.append("password", password);
-
-      const res = await fetch("http://172.252.13.97:5000/api/auth/admin/login", {
+  try {
+    const res = await fetch(
+      "http://172.252.13.97:5000/api/auth/admin/login",
+      {
         method: "POST",
-        body: formData,
-      });
-
-      const data = await res.json();
-      console.log("LOGIN RESPONSE:", data);
-
-      if (res.ok) {
-        setMessage("Login successful!");
-        setIsSuccess(true);
-
-        // Save JWT Token
-        if (data.token) {
-          Cookies.set("token", data.token);
-        }
-
-        setTimeout(() => {
-          router.push("/dashboard");
-        }, 500);
-      } else {
-        setMessage(JSON.stringify(data));
-        setIsSuccess(false);
+        credentials: "include",
+        headers: {
+          Accept: "application/json",
+        },
+        body: new Blob(
+          [
+            JSON.stringify({
+              email: email.trim(),
+              password: password,
+            }),
+          ],
+          { type: "application/json" }
+        ),
       }
-    } catch (error) {
-      setMessage("Something went wrong!");
+    );
+    console.log("res",res)
+
+    const data = await res.json();
+    console.log("LOGIN RESPONSE:", data);
+
+    if (res.ok && data.success) {
+      setMessage(data.message || "Login successful!");
+      setIsSuccess(true);
+
+      
+
+      // if (data.accessToken) {
+      //   Cookies.set("token", data.accessToken);
+      // }
+
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 500);
+    } else {
+      if (data?.errorSources?.length) {
+        setMessage(data.errorSources[0].message);
+      } else {
+        setMessage(data.message || "Login failed");
+      }
       setIsSuccess(false);
     }
-
+  } catch (error) {
+    console.error(error);
+    setMessage("Something went wrong!");
+    setIsSuccess(false);
+  } finally {
     setLoading(false);
-  };
+  }
+};
+
   return (
     <div className="bg-[#EAEAEA] h-screen grid justify-center items-center">
       <main className="bg-white overflow-y-auto hide-scrollbar py-15 px-11 rounded-3xl  ">
