@@ -4,9 +4,13 @@ import React from "react";
 
 import Sidebar from "@/app/component/Sidebar";
 import Topbar from "@/app/component/Topbar";
+import Providers from "@/app/providers";
 
 const layout = ({ children }) => {
   return (
+
+    <Providers>
+
     <div className="bg-[#EAEAEA]">
       <div className="flex h-screen overflow-hidden">
         <Sidebar />
@@ -34,6 +38,7 @@ const layout = ({ children }) => {
         </div>
       </div>
     </div>
+    </Providers>
   );
 };
 

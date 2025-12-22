@@ -1,13 +1,11 @@
 "use client";
 import { useState } from "react";
-import Image from "next/image";
 import React from "react";
-
-import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 import InputField from "@/app/component/InputField";
 import Password from "@/app/component/Password";
-import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 
 const SignIn = () => {
@@ -21,133 +19,141 @@ const SignIn = () => {
   const [isSuccess, setIsSuccess] = useState(false);
 
   const handleLogin = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  setLoading(true);
-  setMessage("");
-  setIsSuccess(false);
+    setLoading(true);
+    setMessage("");
+    setIsSuccess(false);
 
-  try {
-    const res = await fetch(
-      "http://172.252.13.97:5000/api/auth/admin/login",
-      {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          Accept: "application/json",
-        },
-        body: new Blob(
-          [
-            JSON.stringify({
-              email: email.trim(),
-              password: password,
-            }),
-          ],
-          { type: "application/json" }
-        ),
-      }
-    );
-    console.log("res",res)
+    try {
+      // const res = await fetch(
+      //   "http://172.252.13.97:5000/api/auth/admin/login",
+      //   {
+      //     method: "POST",
+      //     credentials: "include", // IMPORTANT
+      //     headers: { "Content-Type": "application/json" },
+      //     body: JSON.stringify({ email, password }),
+      //   }
+      // );
 
-    const data = await res.json();
-    console.log("LOGIN RESPONSE:", data);
+      // const data = await res.json();
 
-    if (res.ok && data.success) {
-      setMessage(data.message || "Login successful!");
-      setIsSuccess(true);
-
-      
-
-      // if (data.accessToken) {
-      //   Cookies.set("token", data.accessToken);
+      // if (data.success) {
+      //   router.push("/dashboard");
       // }
 
-      setTimeout(() => {
-        router.push("/dashboard");
-      }, 500);
-    } else {
-      if (data?.errorSources?.length) {
-        setMessage(data.errorSources[0].message);
+      const res = await fetch(
+        "http://172.252.13.97:5000/api/auth/admin/login",
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: email.trim(),
+            password,
+          }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (data.success) {
+        Cookies.set("accessToken", data?.data?.accessToken, {
+          secure: true,
+          httpOnly: true,
+          sameSite: "lax",
+        });
+
+        Cookies.set("refreshToken", data?.data?.refreshToken, {
+          secure: true,
+          httpOnly: true,
+          sameSite: "lax",
+        });
+
+        // console.log(accessToken);
+
+        // setMessage("Login successful!");
+        // setIsSuccess(true);
+
+        // router.push("/");
+         router.push("/dashboard");
+        console.log(
+          "hi"
+        )
+
+        // setTimeout(() => {
+        // }, 300);
       } else {
         setMessage(data.message || "Login failed");
+        setIsSuccess(false);
       }
+    } catch (error) {
+      setMessage("Something went wrong!");
       setIsSuccess(false);
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.error(error);
-    setMessage("Something went wrong!");
-    setIsSuccess(false);
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   return (
     <div className="bg-[#EAEAEA] h-screen grid justify-center items-center">
-      <main className="bg-white overflow-y-auto hide-scrollbar py-15 px-11 rounded-3xl  ">
+      <main className="bg-white py-15 px-11 rounded-3xl">
         <form
           onSubmit={handleLogin}
-          className="gap-5 flex flex-col items-center w-[480px] "
+          className="gap-5 flex flex-col items-center w-[480px]"
         >
-          <h3 className="font-inter font-medium text-[32px] text-[#333333] mb-6 mt-">
-            Signin to Account
+          <h3 className="font-inter font-medium text-[32px] text-[#333333] mb-6">
+            Sign in to Account
           </h3>
 
-          <p className="font-inter  text-[#333333]">
+          <p className="font-inter text-[#333333]">
             Please enter your email and password to continue
           </p>
 
           <InputField
             label="Email Address"
-            labelClass={`text-[#333333] text-[16px]`}
-            placeholder=""
-            inputClass={`border-[#21E6A0] border bg-transparent  text-[#5C5C5C] py-3 placeholder:text-[#5C5C5C] rounded`}
+            labelClass="text-[#333333] text-[16px]"
+            inputClass="border border-[#21E6A0] text-[#5C5C5C] py-3 rounded bg-white"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
+
           <Password
-            inputClass="border border-[#21E6A0]"
             label="Password"
+            inputClass="border border-[#21E6A0]"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            // placeholder="Enter your password"
           />
 
-          <div className="flex justify-between items-center  w-full ">
-            <div className="flex items-center gap-2.5">
+          <div className="flex justify-between items-center w-full">
+            <div className="flex items-center gap-2">
               <input type="checkbox" className="w-4 h-4 accent-[#21E6A0]" />
-              <p className="text-[#333333] font-inter ">Remember Password</p>
+              <p className="text-[#333333] font-inter">Remember Password</p>
             </div>
+
             <Link href="/forgotpassword">
-              <p className="text-[#21E6A0] font-inter ">Forgot Password?</p>
+              <p className="text-[#21E6A0] font-inter">Forgot Password?</p>
             </Link>
           </div>
 
           {message && (
-          <p
-            className={`text-center mt-2 ${
-              isSuccess ? "text-green-600" : "text-red-600"
-            }`}
-          >
-            {message}
-          </p>
-        )}
+            <p
+              className={`text-center mt-2 ${
+                isSuccess ? "text-green-600" : "text-red-600"
+              }`}
+            >
+              {message}
+            </p>
+          )}
 
-          
-            <button 
+          <button
             disabled={loading}
-            className="bg-gradient-to-r from-[#21E6A0] to-[#6DF844] text-white font-semibold text-xl w-full font-inter py-3 rounded-lg cursor-pointer mt-12">
-              
-              {loading? "Signing In..." : "Sign In"}
-            </button>
-          
-
-          {/* <p className="font-inter ">
-            Don’t have an account?
-            <a href="/signup" className="font-bold">
-              Sign up
-            </a>
-          </p> */}
+            className="bg-gradient-to-r from-[#21E6A0] to-[#6DF844] text-white font-semibold text-xl w-full py-3 rounded-lg mt-12 disabled:opacity-60"
+          >
+            {loading ? "Signing In..." : "Sign In"}
+          </button>
         </form>
       </main>
     </div>

@@ -24,19 +24,21 @@ const Users = () => {
   try {
     setLoading(true);
 
-    // const token = Cookies.get("accessToken");
+    const accesstoken = Cookies.get("accessToken");
 
     const res = await fetch(
       "http://172.252.13.97:5000/api/admin/users", 
       {
         credentials: "include",
         method: "GET",
-        // headers: {
-        //   "Content-Type": "application/json",
-        //   Authorization: `Bearer ${token}`,
-        // },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accesstoken}`,
+        },
       }
     );
+
+    console.log("token", token);
 
     // const result = await res.json();
     const result = await res.json();

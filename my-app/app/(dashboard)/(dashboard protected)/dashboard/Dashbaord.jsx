@@ -7,9 +7,9 @@ import React, { useEffect, useState } from "react";
 
 const Dashbaord = () => {
   const [stats, setStats] = useState({
-    total_users: 0,
-    total_videos: 0,
-    total_tickets: 0,
+    users: 0,
+    posts: 0,
+    reports: 0,
   });
 
   const [loading, setLoading] = useState(true);
