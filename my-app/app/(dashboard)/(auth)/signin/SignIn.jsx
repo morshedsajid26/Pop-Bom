@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import InputField from "@/app/component/InputField";
 import Password from "@/app/component/Password";
 import Cookies from "js-cookie";
+import axios from "axios";
 
 const SignIn = () => {
   const router = useRouter();
@@ -26,65 +27,25 @@ const SignIn = () => {
     setIsSuccess(false);
 
     try {
-      // const res = await fetch(
-      //   "http://172.252.13.97:5000/api/auth/admin/login",
-      //   {
-      //     method: "POST",
-      //     credentials: "include", // IMPORTANT
-      //     headers: { "Content-Type": "application/json" },
-      //     body: JSON.stringify({ email, password }),
-      //   }
-      // );
-
-      // const data = await res.json();
-
-      // if (data.success) {
-      //   router.push("/dashboard");
-      // }
-
       const res = await fetch(
         "http://172.252.13.97:5000/api/auth/admin/login",
         {
           method: "POST",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: email.trim(),
-            password,
-          }),
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
         }
       );
 
       const data = await res.json();
+      console.log("Login response data:", data);
 
       if (data.success) {
-        Cookies.set("accessToken", data?.data?.accessToken, {
-          secure: true,
-          httpOnly: true,
-          sameSite: "lax",
-        });
+        const token = data?.data?.accessToken;
+        const refreshToken = data?.data?.refreshToken;
+        Cookies.set("accessToken", token, { expires: 1 });
+        Cookies.set("refreshToken", refreshToken, { expires: 7 });
 
-        Cookies.set("refreshToken", data?.data?.refreshToken, {
-          secure: true,
-          httpOnly: true,
-          sameSite: "lax",
-        });
-
-        // console.log(accessToken);
-
-        // setMessage("Login successful!");
-        // setIsSuccess(true);
-
-        // router.push("/");
-         router.push("/dashboard");
-        console.log(
-          "hi"
-        )
-
-        // setTimeout(() => {
-        // }, 300);
+        router.push("/dashboard");
       } else {
         setMessage(data.message || "Login failed");
         setIsSuccess(false);
