@@ -13,6 +13,7 @@ const Dashbaord = () => {
   });
 
   const [loading, setLoading] = useState(true);
+  const [selectedYear, setSelectedYear] = useState("2025");
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -80,12 +81,14 @@ const Dashbaord = () => {
           <div className="mb-12 flex items-center justify-between">
             <p className="font-inter text-black text-[20px]">User Chart</p>
             <Dropdown
-              placeholder="2025"
+               placeholder={selectedYear}
+                value={selectedYear} 
               className="w-[7%] border rounded-xl p-2.5 font-inter font-medium"
               options={["2025", "2024", "2023", "2022", "2021", "2020"]}
+              onSelect={(value) => setSelectedYear(value)}
             />
           </div>
-          <UserChart />
+          <UserChart year={selectedYear} />
         </div>
       </div>
     </div>

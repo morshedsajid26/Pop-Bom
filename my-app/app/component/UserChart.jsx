@@ -8,30 +8,96 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 
-const data = [
-  { month: "Jan", value: 400 },
-  { month: "Feb", value: 350 },
-  { month: "Mar", value: 310 },
-  { month: "Apr", value: 340 },
-  { month: "May", value: 460 },
-  { month: "Jun", value: 520 },
-  { month: "Jul", value: 500 },
-  { month: "Aug", value: 480 },
-  { month: "Sep", value: 540 },
-  { month: "Oct", value: 600 },
-  { month: "Nov", value: 590 },
-  { month: "Dec", value: 570 },
+const months = [
+  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
 ];
 
-export default function UserChart() {
+// 🔹 helper: month-wise user count (year based)
+const generateMonthlyUserData = (users, year) => {
+  const monthCount = months.reduce((acc, m) => {
+    acc[m] = 0;
+    return acc;
+  }, {});
+
+  users.forEach((user) => {
+    if (!user.createdAt) return;
+
+    const date = new Date(user.createdAt);
+
+    // 🔥 year filter
+    if (String(date.getFullYear()) !== String(year)) return;
+
+    const monthName = months[date.getMonth()];
+    monthCount[monthName]++;
+  });
+
+  return months.map((month) => ({
+    month,
+    value: monthCount[month],
+  }));
+};
+
+export default function UserChart({ year }) {
+  const [users, setUsers] = useState([]);
+  const [chartData, setChartData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // 🔹 fetch users once
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const token = Cookies.get("accessToken");
+
+        const res = await fetch(
+          "http://172.252.13.97:5000/api/admin/users",
+          {
+            method: "GET",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const result = await res.json();
+        if (!res.ok) throw new Error(result.message);
+
+        setUsers(result.data);
+      } catch (err) {
+        console.error("Chart data error:", err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
+  // 🔹 year change হলে chart update
+  useEffect(() => {
+    if (users.length && year) {
+      const monthlyData = generateMonthlyUserData(users, year);
+      setChartData(monthlyData);
+    }
+  }, [users, year]);
+
+  if (loading) {
+    return (
+      <div className="h-[420px] flex items-center justify-center text-gray-400">
+        Loading chart...
+      </div>
+    );
+  }
+
   return (
     <div className="w-full h-[420px] font-inter">
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart
-          data={data}
-          margin={{ top: 10, right: 0, left: 0, bottom: 0 }}
-        >
+        <LineChart data={chartData}>
           <CartesianGrid stroke="#E5E7EB" strokeDasharray="3 3" />
 
           <XAxis
@@ -39,18 +105,17 @@ export default function UserChart() {
             tick={{ fill: "#9CA3AF", fontSize: 12 }}
             axisLine={false}
             tickLine={false}
-            padding={{ left: 0, right: 10 }}
           />
 
           <YAxis
-            width={30} // 🔥 this removes left gap
+            width={30}
             tick={{ fill: "#9CA3AF", fontSize: 12 }}
             axisLine={false}
             tickLine={false}
+            allowDecimals={false}
           />
 
           <Tooltip
-            cursor={{ stroke: "#E5E7EB" }}
             contentStyle={{
               borderRadius: "8px",
               border: "1px solid #E5E7EB",
@@ -62,12 +127,7 @@ export default function UserChart() {
             dataKey="value"
             stroke="#4F6BFF"
             strokeWidth={2.5}
-            dot={{
-              r: 4,
-              fill: "#4F6BFF",
-              stroke: "#4F6BFF",
-              strokeWidth: 2,
-            }}
+            dot={{ r: 4, fill: "#4F6BFF" }}
             activeDot={{ r: 6 }}
           />
         </LineChart>

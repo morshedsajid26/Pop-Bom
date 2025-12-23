@@ -6,15 +6,16 @@ import { createPortal } from "react-dom";
 const Dropdown = ({
   label = "",
   placeholder = "",
+  value,
   options = [],
   onSelect,
-  className,
-  inputClass,
-  optionClass,
-  labelClass,
-  icon
+  className = "",
+  inputClass = "",
+  optionClass = "",
+  labelClass = "",
+  icon = "",
 }) => {
-  const [selected, setSelected] = useState("");
+  const [selected, setSelected] = useState(value ?? placeholder ?? "");
   const [show, setShow] = useState(false);
   const [coords, setCoords] = useState(null);
 
@@ -22,20 +23,23 @@ const Dropdown = ({
   const triggerRef = useRef(null);
   const menuRef = useRef(null);
 
-  const handleSelect = (value) => {
-    setSelected(value);
+  // 🔁 sync selected value from parent
+  useEffect(() => {
+    setSelected(value ?? placeholder ?? "");
+  }, [value, placeholder]);
+
+  const handleSelect = (val) => {
+    setSelected(val);
     setShow(false);
-    onSelect?.(value);
+    onSelect?.(val);
   };
 
-  // outside click (FIXED for portal)
+  // 🔹 outside click (portal safe)
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target) &&
-        menuRef.current &&
-        !menuRef.current.contains(e.target)
+        !dropdownRef.current?.contains(e.target) &&
+        !menuRef.current?.contains(e.target)
       ) {
         setShow(false);
       }
@@ -46,44 +50,48 @@ const Dropdown = ({
       document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // calculate dropdown position
+  // 🔹 calculate dropdown position
   useEffect(() => {
-    if (show && triggerRef.current) {
-      const rect = triggerRef.current.getBoundingClientRect();
-      setCoords({
-        top: rect.bottom + window.scrollY + 4,
-        left: rect.left + window.scrollX,
-        width: rect.width,
-      });
-    }
+    if (!show || !triggerRef.current) return;
+
+    const rect = triggerRef.current.getBoundingClientRect();
+    setCoords({
+      top: rect.bottom + window.scrollY + 4,
+      left: rect.left + window.scrollX,
+      width: rect.width,
+    });
   }, [show]);
 
   return (
     <div ref={dropdownRef} className={`flex flex-col relative ${className}`}>
       {/* Label */}
-      <label className={`font-inter text-[#000000] ${labelClass}`}>
-        {label}
-      </label>
+      {label && (
+        <label className={`font-inter text-black ${labelClass}`}>
+          {label}
+        </label>
+      )}
 
-      {/* Input Box */}
+      {/* Trigger */}
       <div
-        className="relative"
         ref={triggerRef}
-        onClick={() => setShow(!show)}
+        onClick={() => setShow((p) => !p)}
+        className="relative cursor-pointer"
       >
         <input
           readOnly
           value={selected}
           placeholder={placeholder}
-          className={`w-full bg-transparent outline-none text-[#000000] placeholder:text-[#000000] cursor-pointer ${inputClass}`}
+          className={`w-full bg-transparent outline-none cursor-pointer text-black placeholder:text-black ${inputClass}`}
         />
 
-        <div className={`w-6 h-6 absolute right-0 top-1/2 -translate-y-1/2 flex items-center justify-center ${icon}`}>
+        <div
+          className={`w-6 h-6 absolute right-0 top-1/2 -translate-y-1/2 flex items-center justify-center ${icon}`}
+        >
           {show ? <FaCaretUp /> : <FaCaretDown />}
         </div>
       </div>
 
-      {/* Dropdown Menu (Portal) */}
+      {/* Menu */}
       {show && coords &&
         createPortal(
           <div
@@ -96,14 +104,19 @@ const Dropdown = ({
               zIndex: 9999,
             }}
             className={`bg-white border border-[#CED2E5] rounded-md shadow-md
-              text-[#000000] transition-all duration-300 text-center
-              max-h-40 overflow-auto hide-scrollbar font-inter ${optionClass}`}
+              max-h-40 overflow-auto hide-scrollbar font-inter text-center
+              ${optionClass}`}
           >
             {options.map((item, index) => (
               <div
                 key={index}
                 onClick={() => handleSelect(item)}
-                className="py-2 hover:bg-gradient-to-r from-[#21E6A0] to-[#6DF844] hover:text-white cursor-pointer"
+                className={`py-2 cursor-pointer
+                  ${
+                    selected === item
+                      ? "bg-gradient-to-r from-[#21E6A0] to-[#6DF844] text-white"
+                      : "hover:bg-gradient-to-r hover:from-[#21E6A0] hover:to-[#6DF844] hover:text-white"
+                  }`}
               >
                 {item}
               </div>

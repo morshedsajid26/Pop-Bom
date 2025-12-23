@@ -6,10 +6,10 @@ import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 
 const TableHeads = [
-  // { Title: "Name", key: "name", width: "20%" },
+  { Title: "Name", key: "name", width: "20%" },
   { Title: "Username", key: "username", width: "20%" },
   { Title: "User Mail", key: "usermail", width: "20%" },
-  // { Title: "Contact Number", key: "number", width: "20%" },
+  { Title: "Contact Number", key: "number", width: "20%" },
   { Title: "Created Date", key: "created_date", width: "20%" },
 ];
 
@@ -38,18 +38,26 @@ const Users = () => {
       }
     );
 
-    console.log("token", token);
+  
 
-    // const result = await res.json();
     const result = await res.json();
 
     if (!res.ok) {
       throw new Error(result.message || "Failed to fetch users");
     }
     
-
+const formatNameFromUsername = (username) => {
+  return username
+    .replace(/\d+/g, "")          
+    .split(/[_\.]+/)                
+    .filter(Boolean)                
+    .map(word => 
+      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+    )
+    .join(" ");
+};
     const formattedData = result.data.map((user) => ({
-      // name: user.name,
+      name: formatNameFromUsername(user.username),
       username: `@${user.username}`,
       usermail: user.email,
       // number: user.phone,
