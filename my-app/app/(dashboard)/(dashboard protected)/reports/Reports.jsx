@@ -3,165 +3,219 @@ import Bredcumb from "@/app/component/Bredcumb";
 import Dropdown from "@/app/component/Dropdown";
 import Pagination from "@/app/component/Pagination";
 import Table from "@/app/component/Table";
+import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 
-let StatusDropDown = () => {
+/* ---------- STATUS DROPDOWN (SYNCED) ---------- */
+const StatusDropDown = ({ reportId, currentStatus }) => {
+  const [status, setStatus] = useState(currentStatus);
+
+  const handleChange = async (value) => {
+    setStatus(value);
+
+    try {
+      const token = Cookies.get("accessToken");
+
+      await fetch(
+        `http://172.252.13.97:5000/api/admin/reports/${reportId}/status`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ status: value.toLowerCase() }),
+        }
+      );
+    } catch (error) {
+      console.error("Status update failed");
+    }
+  };
+
   return (
-    <div className="">
-      <Dropdown
-              placeholder="Pending"
-              className={`w-[60%]  rounded-xl p-2 font-inter font-medium`}
-              options={["Solved", "Pending", "Issued"]}
-              inputClass={``}
-            />
-    </div>
-  )
+    <Dropdown
+      placeholder={status}
+      className="w-[60%] rounded-xl p-2 font-inter font-medium"
+      options={["Solved", "Pending", "Issued"]}
+      onChange={handleChange}
+    />
+  );
 };
 
+/* ---------- TABLE HEADERS ---------- */
 const TableHeads = [
- 
-
-  {
-    Title: "Username",
-    key: "username",
-    width: "10%",
-  },
-
+  { Title: "Username", key: "username", width: "10%" },
   { Title: "User Mail", key: "usermail", width: "10%" },
   { Title: "Contact Number", key: "number", width: "10%" },
+  { Title: "Short Title", key: "short_title", width: "10%" },
   { Title: "Description", key: "description", width: "10%" },
   { Title: "Status", key: "status", width: "10%" },
   { Title: "Date", key: "date", width: "10%" },
- 
 ];
-
-// ROWS
-const TableRows = [
-  {
-    
-    username: "@sarah_m",
-    usermail: "bNt6a@example.com",
-    number: "+1 123-456-7890",
-    description: "...",
-    status: <StatusDropDown/>,
-    date: "2023-01-01"
-  },
-
-  {
-    
-    username: "@sarah_m",
-    usermail: "bNt6a@example.com",
-    number: "+1 123-456-7890",
-    description: "...",
-    status: <StatusDropDown/>,
-    date: "2023-01-01"
-  },
-  {
-    
-    username: "@sarah_m",
-    usermail: "bNt6a@example.com",
-    number: "+1 123-456-7890",
-    description: "...",
-    status: <StatusDropDown/>,
-    date: "2023-01-01"
-  },
-  {
-    
-    username: "@sarah_m",
-    usermail: "bNt6a@example.com",
-    number: "+1 123-456-7890",
-    description: "...",
-    status: <StatusDropDown/>,
-    date: "2023-01-01"
-  },
-  {
-    
-    username: "@sarah_m",
-    usermail: "bNt6a@example.com",
-    number: "+1 123-456-7890",
-    description: "...",
-    status: <StatusDropDown/>,
-    date: "2023-01-01"
-  },
-  
-];
-
 
 const Reports = () => {
-    const [baseOnTitle, setBaseOnTitle] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1);
-     // Set data for pagination
+  const [loading, setLoading] = useState(false);
+  const [reports, setReports] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [range, setRange] = useState("today");
+
+  // 🔢 STATS STATE
+  const [stats, setStats] = useState({
+    newTicket: 0,
+    onProgress: 0,
+    completed: 0,
+  });
+
+  /* ---------- FETCH REPORTS (SYNCED WITH RANGE) ---------- */
+  const fetchReports = async (rangeValue) => {
+    try {
+      setLoading(true);
+
+      const token = Cookies.get("accessToken");
+
+      const res = await fetch(
+        `http://172.252.13.97:5000/api/admin/reports?range=${rangeValue}`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.message);
+
+      const reportsArray = Array.isArray(result.data?.reports)
+        ? result.data.reports
+        : [];
+
+      // 🔢 CALCULATE STATS
+      const onProgressCount = reportsArray.filter(
+        (r) => r.status === "open" || r.status === "pending"
+      ).length;
+
+      const completedCount = reportsArray.filter(
+        (r) => r.status === "solved" || r.status === "closed"
+      ).length;
+
+      setStats({
+        newTicket: result.data?.todaysReportsCount || 0,
+        onProgress: onProgressCount,
+        completed: completedCount,
+      });
+
+      // 🧾 TABLE DATA
+      const formattedData = reportsArray.map((item) => ({
+        username: `@${item.userId?.slice(-3) || "user"}`,
+        usermail: "N/A",
+        number: "N/A",
+        short_title: item.shortTitle || "...",
+        description: item.description || "...",
+        status: (
+          <StatusDropDown
+            reportId={item._id}
+            currentStatus={
+              item.status === "solved"
+                ? "Solved"
+                : item.status === "issued"
+                ? "Issued"
+                : "Pending"
+            }
+          />
+        ),
+        date: item.createdAt?.split("T")[0],
+      }));
+
+      setReports(formattedData);
+    } catch (error) {
+      console.error("Report fetch error:", error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /* ---------- INITIAL + RANGE CHANGE ---------- */
   useEffect(() => {
-    setBaseOnTitle(TableRows);
-  }, []);
+    fetchReports(range);
+  }, [range]);
 
-    // Pagination setup
-      const itemsPerPage = 10;
-      const totalPages = Math.ceil(baseOnTitle.length / itemsPerPage);
-      const startIndex = (currentPage - 1) * itemsPerPage;
-      const currentItems = baseOnTitle.slice(startIndex, startIndex + itemsPerPage);
-    return (
+  /* ---------- PAGINATION ---------- */
+  const itemsPerPage = 10;
+  const totalPages = Math.ceil(reports.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentItems = reports.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
 
-      <>
+  return (
+    <>
       <Bredcumb />
+
+      {/* ---------- STATS ---------- */}
       <div className="grid grid-cols-12 gap-7 mt-10">
-           <div className="bg-white px-10 pt-2 pb-10 col-span-4 rounded-2xl text-center ">
-          <div className="flex justify-end">
-            <Dropdown
-              placeholder="Today"
-              className={`w-[30%]  border   rounded-xl p-1 font-inter font-medium`}
-              options={["Today", "This Week", "This Month", "This Year", "All Time"]}
-              inputClass={``}
-            />
+        {[
+          { title: "New Ticket", value: stats.newTicket },
+          { title: "On Progress", value: stats.onProgress },
+          { title: "Completed", value: stats.completed },
+        ].map((card, i) => (
+          <div
+            key={i}
+            className="bg-white px-10 pt-2 pb-10 col-span-4 rounded-2xl text-center"
+          >
+            <div className="flex justify-end">
+              <Dropdown
+                placeholder="Today"
+                className="w-[30%] border rounded-xl p-1 font-inter font-medium"
+                options={[
+                  "Today",
+                  "This Week",
+                  "This Month",
+                  "This Year",
+                  "All Time",
+                ]}
+                onChange={(val) =>
+                  setRange(
+                    val === "Today"
+                      ? "today"
+                      : val === "This Week"
+                      ? "week"
+                      : val === "This Month"
+                      ? "month"
+                      : val === "This Year"
+                      ? "year"
+                      : "all"
+                  )
+                }
+              />
+            </div>
+            <p className="font-inter text-black text-xl">{card.title}</p>
+            <p className="font-inter text-black mt-5">{card.value}</p>
           </div>
-          <p className="font-inter text-black text-xl ">New Ticket</p>
-          <p className="font-inter text-black mt-5 ">15</p>
-        </div>
-
-           <div className="bg-white px-10 pt-2 pb-10 col-span-4 rounded-2xl text-center ">
-          <div className="flex justify-end">
-            <Dropdown
-              placeholder="Today"
-              className={`w-[30%]  border   rounded-xl p-1 font-inter font-medium`}
-              options={["Today", "This Week", "This Month", "This Year", "All Time"]}
-              inputClass={``}
-            />
-          </div>
-          <p className="font-inter text-black text-xl ">On Progress</p>
-          <p className="font-inter text-black mt-5 ">15</p>
-        </div>
-
-        <div className="bg-white px-10 pt-2 pb-10 col-span-4 rounded-2xl text-center ">
-          <div className="flex justify-end">
-            <Dropdown
-              placeholder="Today"
-              className={`w-[30%]  border   rounded-xl p-1 font-inter font-medium`}
-              options={["Today", "This Week", "This Month", "This Year", "All Time"]}
-              inputClass={``}
-            />
-          </div>
-          <p className="font-inter text-black text-xl ">Completed</p>
-          <p className="font-inter text-black mt-5 ">15</p>
-        </div>
-
-        
-      </div>
-    <div className="bg-white rounded-2xl mt-7 ">
-
-      
-
-      <div className="">
-        <Table TableHeads={TableHeads} TableRows={currentItems} />
+        ))}
       </div>
 
-      <div className="py-5">
-         <Pagination
-        totalPages={totalPages}
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-      />
+      {/* ---------- TABLE ---------- */}
+      <div className="bg-white rounded-2xl mt-7">
+        {loading ? (
+          <div className="py-10 text-center text-gray-500">
+            Loading reports...
+          </div>
+        ) : (
+          <Table TableHeads={TableHeads} TableRows={currentItems} />
+        )}
+
+        <div className="py-5">
+          <Pagination
+            totalPages={totalPages}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+          />
+        </div>
       </div>
-    </div>
     </>
   );
 };

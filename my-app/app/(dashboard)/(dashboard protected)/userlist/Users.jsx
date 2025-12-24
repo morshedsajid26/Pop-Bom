@@ -21,56 +21,57 @@ const Users = () => {
   // 🔹 Fetch users
   useEffect(() => {
     const fetchUsers = async () => {
-  try {
-    setLoading(true);
+      try {
+        setLoading(true);
 
-    const accesstoken = Cookies.get("accessToken");
+        const accesstoken = Cookies.get("accessToken");
 
-    const res = await fetch(
-      "http://172.252.13.97:5000/api/admin/users", 
-      {
-        credentials: "include",
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accesstoken}`,
-        },
+        const res = await fetch("http://172.252.13.97:5000/api/admin/users", {
+          credentials: "include",
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accesstoken}`,
+          },
+        });
+
+        const result = await res.json();
+
+        if (!res.ok) {
+          throw new Error(result.message || "Failed to fetch users");
+        }
+
+        const formatNameFromUsername = (username) => {
+          return username
+            .replace(/\d+/g, "")
+            .split(/[_\.]+/)
+            .filter(Boolean)
+            .map(
+              (word) =>
+                word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+            )
+            .join(" ");
+        };
+
+        const sortedUsers = [...result.data].sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+
+        const formattedData = sortedUsers.map((user) => ({
+          name: formatNameFromUsername(user.username),
+          username: `@${user.username}`,
+          usermail: user.email,
+          // number: user.phone,
+          created_date: user.createdAt?.split("T")[0],
+        }));
+
+        setUsers(formattedData);
+      } catch (error) {
+        console.error("User fetch error:", error.message);
+      } finally {
+        setLoading(false);
       }
-    );
-
-  
-
-    const result = await res.json();
-
-    if (!res.ok) {
-      throw new Error(result.message || "Failed to fetch users");
-    }
-    
-const formatNameFromUsername = (username) => {
-  return username
-    .replace(/\d+/g, "")          
-    .split(/[_\.]+/)                
-    .filter(Boolean)                
-    .map(word => 
-      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-    )
-    .join(" ");
-};
-    const formattedData = result.data.map((user) => ({
-      name: formatNameFromUsername(user.username),
-      username: `@${user.username}`,
-      usermail: user.email,
-      // number: user.phone,
-      created_date: user.createdAt?.split("T")[0],
-    }));
-
-    setUsers(formattedData);
-  } catch (error) {
-    console.error("User fetch error:", error.message);
-  } finally {
-    setLoading(false);
-  }
-};
+    };
 
     fetchUsers();
   }, []);
