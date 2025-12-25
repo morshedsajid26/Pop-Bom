@@ -42,8 +42,12 @@ const SignIn = () => {
       if (data.success) {
         const token = data?.data?.accessToken;
         const refreshToken = data?.data?.refreshToken;
+        const id = data.data.user.adminId;
+        const email = data.data.user.email;
         Cookies.set("accessToken", token, { expires: 1 });
         Cookies.set("refreshToken", refreshToken, { expires: 7 });
+        localStorage.setItem("id", id);
+        localStorage.setItem("email", email);
 
         router.push("/dashboard");
       } else {
