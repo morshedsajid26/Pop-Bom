@@ -6,7 +6,22 @@ import Table from "@/app/component/Table";
 import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 
-/* ---------- STATUS DROPDOWN (SYNCED) ---------- */
+/* ================== HELPERS ================== */
+const getUsernameFromEmail = (email = "") => email.split("@")[0];
+
+const formatNameFromUsername = (username = "") => {
+  return username
+    .replace(/\d+/g, "")
+    .split(/[_\.]+/)
+    .filter(Boolean)
+    .map(
+      (word) =>
+        word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+    )
+    .join(" ");
+};
+
+/* ================= STATUS DROPDOWN ================= */
 const StatusDropDown = ({ reportId, currentStatus }) => {
   const [status, setStatus] = useState(currentStatus);
 
@@ -34,15 +49,15 @@ const StatusDropDown = ({ reportId, currentStatus }) => {
 
   return (
     <Dropdown
-      placeholder={status}
+      value={status}
       className="w-[60%] rounded-xl p-2 font-inter font-medium"
       options={["Solved", "Pending", "Issued"]}
-      onChange={handleChange}
+      onSelect={handleChange}   // ✅ FIX
     />
   );
 };
 
-/* ---------- TABLE HEADERS ---------- */
+/* ================= TABLE HEADERS ================= */
 const TableHeads = [
   { Title: "Username", key: "username", width: "10%" },
   { Title: "User Mail", key: "usermail", width: "10%" },
@@ -59,14 +74,13 @@ const Reports = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [range, setRange] = useState("today");
 
-  // 🔢 STATS STATE
   const [stats, setStats] = useState({
     newTicket: 0,
     onProgress: 0,
     completed: 0,
   });
 
-  /* ---------- FETCH REPORTS (SYNCED WITH RANGE) ---------- */
+  /* ================= FETCH REPORTS ================= */
   const fetchReports = async (rangeValue) => {
     try {
       setLoading(true);
@@ -77,7 +91,6 @@ const Reports = () => {
         `http://172.252.13.97:5000/api/admin/reports?range=${rangeValue}`,
         {
           method: "GET",
-          credentials: "include",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -92,42 +105,39 @@ const Reports = () => {
         ? result.data.reports
         : [];
 
-      // 🔢 CALCULATE STATS
-      const onProgressCount = reportsArray.filter(
-        (r) => r.status === "open" || r.status === "pending"
-      ).length;
-
-      const completedCount = reportsArray.filter(
-        (r) => r.status === "solved" || r.status === "closed"
-      ).length;
-
+      /* ---------- STATS ---------- */
       setStats({
         newTicket: result.data?.todaysReportsCount || 0,
-        onProgress: onProgressCount,
-        completed: completedCount,
+        onProgress: result.data?.onProgressReportsCount || 0,
+        completed: result.data?.completedReportsCount || 0,
       });
 
-      // 🧾 TABLE DATA
-      const formattedData = reportsArray.map((item) => ({
-        username: `@${item.userId?.slice(-3) || "user"}`,
-        usermail: "N/A",
-        number: "N/A",
-        short_title: item.shortTitle || "...",
-        description: item.description || "...",
-        status: (
-          <StatusDropDown
-            reportId={item._id}
-            currentStatus={
-              item.status === "solved"
-                ? "Solved"
-                : item.status === "issued"
-                ? "Issued"
-                : "Pending"
-            }
-          />
-        ),
-        date: item.createdAt?.split("T")[0],
-      }));
+      /* ---------- TABLE DATA ---------- */
+      const formattedData = reportsArray.map((item) => {
+        const email = item.userId?.email || "";
+        const rawUsername = getUsernameFromEmail(email);
+
+        return {
+          username: formatNameFromUsername(rawUsername) || "User",
+          usermail: email || "N/A",
+          number: "N/A",
+          short_title: item.shortTitle || "...",
+          description: item.description || "...",
+          status: (
+            <StatusDropDown
+              reportId={item._id}
+              currentStatus={
+                item.status === "solved"
+                  ? "Solved"
+                  : item.status === "issued"
+                  ? "Issued"
+                  : "Pending"
+              }
+            />
+          ),
+          date: item.createdAt?.split("T")[0],
+        };
+      });
 
       setReports(formattedData);
     } catch (error) {
@@ -177,7 +187,7 @@ const Reports = () => {
                   "This Year",
                   "All Time",
                 ]}
-                onChange={(val) =>
+                onSelect={(val) =>
                   setRange(
                     val === "Today"
                       ? "today"

@@ -44,10 +44,12 @@ const SignIn = () => {
         const refreshToken = data?.data?.refreshToken;
         const id = data.data.user.adminId;
         const email = data.data.user.email;
+        const name = data.data.user.name;
         Cookies.set("accessToken", token, { expires: 1 });
         Cookies.set("refreshToken", refreshToken, { expires: 7 });
         localStorage.setItem("id", id);
         localStorage.setItem("email", email);
+        localStorage.setItem("name", name);
 
         router.push("/dashboard");
       } else {

@@ -20,6 +20,7 @@ const Profile = () => {
     const fetchProfile = async () => {
       const id = localStorage.getItem("id");
       const email = localStorage.getItem("email");
+      const name = localStorage.getItem("name");
 
       if (!id) {
         setLoading(false);
@@ -39,7 +40,7 @@ const Profile = () => {
           }
         } else {
           // fallback
-          setProfile({ email });
+          setProfile({ email, name });
         }
       } catch (err) {
         console.error("Profile fetch error:", err);
@@ -148,6 +149,7 @@ const Profile = () => {
               <InputField
                 label="Full Name"
                 value={profile?.name || ""}
+                readOnly
                 labelClass="text-[#333333]"
                 inputClass="border border-[#21E6A0] bg-transparent rounded py-3"
               />
@@ -155,7 +157,7 @@ const Profile = () => {
               <InputField
                 label="Email Address"
                 value={profile?.email || ""}
-                disabled
+                readOnly
                 labelClass="text-[#333333]"
                 inputClass="border border-[#21E6A0] bg-transparent rounded py-3"
               />
