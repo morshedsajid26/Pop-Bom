@@ -51,7 +51,13 @@ const SignIn = () => {
         localStorage.setItem("email", email);
         localStorage.setItem("name", name);
 
-        router.push("/dashboard");
+      
+        setMessage("Login successful!");
+        setIsSuccess(true);
+
+        setTimeout(() => {
+          router.push("/dashboard");
+        }, 800);
       } else {
         setMessage(data.message || "Login failed");
         setIsSuccess(false);

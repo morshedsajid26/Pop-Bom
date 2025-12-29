@@ -4,43 +4,50 @@ import React, { useEffect, useRef, useState } from "react";
 import Avatar from "@/public/Avatar.png";
 import { FiEdit, FiX } from "react-icons/fi";
 import InputField from "@/app/component/InputField";
+import Cookies from "js-cookie";
 
 const Profile = () => {
   const [viewOpen, setViewOpen] = useState(false);
-  const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const [profile, setProfile] = useState(null);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    avatar: null,
+  });
 
   const logoRef = useRef(null);
   const [logoPreview, setLogoPreview] = useState(Avatar);
 
-  /* =========================
-     Fetch profile using ID
-     ========================= */
+  /* ===== GET PROFILE ===== */
   useEffect(() => {
+    const id = localStorage.getItem("id");
+    if (!id) return setLoading(false);
+
     const fetchProfile = async () => {
-      const id = localStorage.getItem("id");
-      const email = localStorage.getItem("email");
-      const name = localStorage.getItem("name");
-
-      if (!id) {
-        setLoading(false);
-        return;
-      }
-
       try {
         const res = await fetch(
-          `http://172.252.13.97:5000/api/admin/profile/${id}`
-        );
-        const data = await res.json();
-
-        if (data.success) {
-          setProfile(data.data);
-          if (data.data.avatar) {
-            setLogoPreview(data.data.avatar);
+          `http://172.252.13.97:5000/api/admin/profile/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${Cookies.get("accessToken")}`,
+            },
           }
-        } else {
-          // fallback
-          setProfile({ email, name });
+        );
+
+        const data = await res.json();
+        if (!data.success) return;
+
+        setProfile(data.data);
+        setFormData({
+          name: data.data.name || "",
+          email: data.data.email || "",
+          avatar: null,
+        });
+
+        if (data.data.image) {
+          setLogoPreview(data.data.image);
         }
       } catch (err) {
         console.error("Profile fetch error:", err);
@@ -52,14 +59,62 @@ const Profile = () => {
     fetchProfile();
   }, []);
 
-  /* =========================
-     Handle image select
-     ========================= */
+  /* ===== INPUT CHANGE ===== */
+  const handleChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  /* ===== IMAGE SELECT ===== */
   const handleFileSelect = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    const url = URL.createObjectURL(file);
-    setLogoPreview(url);
+
+    setFormData((prev) => ({ ...prev, avatar: file }));
+    setLogoPreview(URL.createObjectURL(file));
+  };
+
+  /* ===== UPDATE PROFILE ===== */
+  const handleUpdate = async () => {
+    const id = localStorage.getItem("id");
+    if (!id) return;
+
+    try {
+      const payload = new FormData();
+      payload.append("name", formData.name);
+      payload.append("email", formData.email);
+
+      if (formData.avatar) {
+        payload.append("image", formData.avatar); // backend expects `image`
+      }
+
+      const res = await fetch(
+        `http://172.252.13.97:5000/api/admin/profile/${id}`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${Cookies.get("accessToken")}`,
+          },
+          body: payload,
+        }
+      );
+
+      const data = await res.json();
+      console.log("PATCH response:", data);
+
+      if (!data.success) return;
+
+      setProfile(data.data);
+      if (data.data.image) {
+        setLogoPreview(data.data.image);
+      }
+
+      setViewOpen(false);
+    } catch (err) {
+      console.error("Profile update error:", err);
+    }
   };
 
   if (loading) {
@@ -68,7 +123,7 @@ const Profile = () => {
 
   return (
     <div className="w-[530px] gap-8 mt-10">
-      {/* ================= Profile View ================= */}
+      {/* Profile View */}
       <div className="flex items-center gap-10">
         <div>
           <p className="font-inter text-xl mb-2">Profile Image</p>
@@ -83,17 +138,18 @@ const Profile = () => {
 
         <button
           onClick={() => setViewOpen(true)}
-          className="bg-gradient-to-r from-[#21E6A0] to-[#6DF844] text-black w-[35%] font-bold py-2.5 mt-14 rounded-lg text-sm"
+          className="bg-gradient-to-r from-[#21E6A0] to-[#6DF844]
+          text-black w-[35%] cursor-pointer font-bold py-2.5 mt-14 rounded-lg text-sm"
         >
           Edit Profile
         </button>
       </div>
 
-      {/* ================= Info ================= */}
+      {/* Info */}
       <div className="font-inter text-xl text-black mt-10">
         <div className="flex justify-between border-b py-4">
           <span className="font-medium">Name:</span>
-          <span>{profile?.name || "PopBom"}</span>
+          <span>{profile?.name}</span>
         </div>
 
         <div className="flex justify-between border-b py-4">
@@ -102,7 +158,7 @@ const Profile = () => {
         </div>
       </div>
 
-      {/* ================= Edit Modal ================= */}
+      {/* Edit Modal */}
       {viewOpen && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-[#EFEFEF] rounded-3xl p-10 w-[600px]">
@@ -117,7 +173,6 @@ const Profile = () => {
               Edit Profile
             </h3>
 
-            {/* Image edit */}
             <div className="relative flex flex-col items-center mb-12">
               <Image
                 src={logoPreview || Avatar}
@@ -129,7 +184,7 @@ const Profile = () => {
 
               <button
                 onClick={() => logoRef.current.click()}
-                className="w-8 h-8 bg-gradient-to-r from-[#21E6A0] to-[#6DF844]
+                className="w-8 cursor-pointer h-8 bg-gradient-to-r from-[#21E6A0] to-[#6DF844]
                 flex items-center justify-center rounded-lg absolute bottom-0"
               >
                 <FiEdit />
@@ -144,20 +199,21 @@ const Profile = () => {
               />
             </div>
 
-            {/* Inputs */}
             <div className="space-y-8">
               <InputField
                 label="Full Name"
-                value={profile?.name || ""}
-                readOnly
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
                 labelClass="text-[#333333]"
                 inputClass="border border-[#21E6A0] bg-transparent rounded py-3"
               />
 
               <InputField
                 label="Email Address"
-                value={profile?.email || ""}
-                readOnly
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
                 labelClass="text-[#333333]"
                 inputClass="border border-[#21E6A0] bg-transparent rounded py-3"
               />
@@ -165,9 +221,9 @@ const Profile = () => {
 
             <div className="text-center">
               <button
-                onClick={() => setViewOpen(false)}
+                onClick={handleUpdate}
                 className="bg-gradient-to-r from-[#21E6A0] to-[#6DF844]
-                text-black w-[30%] font-bold py-3 mt-14 rounded-lg"
+                text-black w-[30%] cursor-pointer font-bold py-3 mt-14 rounded-lg"
               >
                 Save
               </button>

@@ -61,7 +61,7 @@ const Users = () => {
           name: formatNameFromUsername(user.username),
           username: `@${user.username}`,
           usermail: user.email,
-          // number: user.phone,
+          number: user.phone || "N/A",
           created_date: user.createdAt?.split("T")[0],
         }));
 
