@@ -1,6 +1,8 @@
+import Container from '@/app/component/Container';
+import Navbar from '@/app/component/Navbar';
 import React from 'react'
-import Navbar from '../component/Navbar'
-import Container from '../component/Container'
+// import Navbar from '../component/Navbar'
+// import Container from '../component/Container'
 import { BiPhoneCall } from "react-icons/bi";
 import { MdOutlineMarkEmailUnread } from "react-icons/md";
 
