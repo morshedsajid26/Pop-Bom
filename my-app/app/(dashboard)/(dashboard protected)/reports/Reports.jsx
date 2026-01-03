@@ -3,6 +3,7 @@ import Bredcumb from "@/app/component/Bredcumb";
 import Dropdown from "@/app/component/Dropdown";
 import Pagination from "@/app/component/Pagination";
 import Table from "@/app/component/Table";
+import { API_BASE_URL } from "@/app/config/api";
 import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 
@@ -88,7 +89,7 @@ const Reports = () => {
       const token = Cookies.get("accessToken");
 
       const res = await fetch(
-        `http://172.252.13.97:5000/api/admin/reports?range=${rangeValue}`,
+        `${API_BASE_URL}/api/admin/reports?range=${rangeValue}`,
         {
           method: "GET",
           headers: {
@@ -174,9 +175,9 @@ const Reports = () => {
         ].map((card, i) => (
           <div
             key={i}
-            className="bg-white px-10 pt-2 pb-10 col-span-4 rounded-2xl text-center"
+            className="bg-white px-10 py-10 col-span-4 rounded-2xl text-center"
           >
-            <div className="flex justify-end">
+            {/* <div className="flex justify-end">
               <Dropdown
                 placeholder="Today"
                 className="w-[30%] border rounded-xl p-1 font-inter font-medium"
@@ -201,7 +202,7 @@ const Reports = () => {
                   )
                 }
               />
-            </div>
+            </div> */}
             <p className="font-inter text-black text-xl">{card.title}</p>
             <p className="font-inter text-black mt-5">{card.value}</p>
           </div>

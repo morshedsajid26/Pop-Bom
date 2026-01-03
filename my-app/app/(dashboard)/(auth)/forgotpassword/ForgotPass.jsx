@@ -6,6 +6,7 @@ import Link from "next/link";
 import InputField from "@/app/component/InputField";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { API_BASE_URL } from "@/app/config/api";
 
 
 const ForgotPass = () => {
@@ -30,7 +31,7 @@ const ForgotPass = () => {
       setLoading(true);
 
       // ✅ OTP send request to backend
-      const res = await axios.post("http://172.252.13.97:5000/api/auth/admin/forgot-password", {
+      const res = await axios.post(`${API_BASE_URL}/api/auth/admin/forgot-password`, {
         email: email,
       });
       console.log("OTP API RESPONSE:", res.data);

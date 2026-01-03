@@ -2,6 +2,7 @@
 
 import Dropdown from "@/app/component/Dropdown";
 import UserChart from "@/app/component/UserChart";
+import { API_BASE_URL } from "@/app/config/api";
 import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 
@@ -13,12 +14,12 @@ const Dashbaord = () => {
   });
 
   const [loading, setLoading] = useState(true);
-  const [selectedYear, setSelectedYear] = useState("2025");
+  const [selectedYear, setSelectedYear] = useState("2026");
 
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const res = await fetch("http://172.252.13.97:5000/api/admin/dashboard", {
+        const res = await fetch(`${API_BASE_URL}/api/admin/dashboard`, {
           method: "GET",
           credentials: "include",
           headers: {
@@ -84,7 +85,7 @@ const Dashbaord = () => {
                placeholder={selectedYear}
                 value={selectedYear} 
               className="w-[7%] border rounded-xl p-2.5 font-inter font-medium"
-              options={["2025", "2024", "2023", "2022", "2021", "2020"]}
+              options={["2026","2025", "2024", "2023", "2022", "2021", "2020"]}
               onSelect={(value) => setSelectedYear(value)}
             />
           </div>

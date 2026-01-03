@@ -5,6 +5,7 @@ import Avatar from "@/public/Avatar.png";
 import { FiEdit, FiX } from "react-icons/fi";
 import InputField from "@/app/component/InputField";
 import Cookies from "js-cookie";
+import { API_BASE_URL } from "@/app/config/api";
 
 const Profile = () => {
   const [viewOpen, setViewOpen] = useState(false);
@@ -28,7 +29,7 @@ const Profile = () => {
     const fetchProfile = async () => {
       try {
         const res = await fetch(
-          `http://172.252.13.97:5000/api/admin/profile/${id}`,
+          `${API_BASE_URL}/api/admin/profile/${id}`,
           {
             headers: {
               Authorization: `Bearer ${Cookies.get("accessToken")}`,
@@ -91,7 +92,7 @@ const Profile = () => {
       }
 
       const res = await fetch(
-        `http://172.252.13.97:5000/api/admin/profile/${id}`,
+        `${API_BASE_URL}/api/admin/profile/${id}`,
         {
           method: "PATCH",
           headers: {

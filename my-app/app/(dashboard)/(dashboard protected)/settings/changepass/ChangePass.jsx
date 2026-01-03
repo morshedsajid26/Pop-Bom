@@ -45,7 +45,7 @@ const ChangePass = () => {
 
     try {
       const res = await fetch(
-        `http://172.252.13.97:5000/api/admin/profile/change-password/${id}`,
+        `${API_BASE_URL}/api/admin/profile/change-password/${id}`,
         {
           method: "PUT",
           headers: {

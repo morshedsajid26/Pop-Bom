@@ -8,6 +8,7 @@ import InputField from "@/app/component/InputField";
 import Password from "@/app/component/Password";
 import Cookies from "js-cookie";
 import axios from "axios";
+import { API_BASE_URL } from "@/app/config/api";
 
 const SignIn = () => {
   const router = useRouter();
@@ -28,7 +29,7 @@ const SignIn = () => {
 
     try {
       const res = await fetch(
-        "http://172.252.13.97:5000/api/auth/admin/login",
+        `${API_BASE_URL}/api/auth/admin/login`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

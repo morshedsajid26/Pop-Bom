@@ -1,5 +1,6 @@
 "use client";
 
+import { API_BASE_URL } from "@/app/config/api";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -63,7 +64,7 @@ const OTP = () => {
       setLoading(true);
 
       const res = await axios.post(
-        "http://172.252.13.97:5000/api/auth/admin/verify-otp",
+        `${API_BASE_URL}/api/auth/admin/verify-otp`,
         {
           email: email,
           otp: finalOtp,

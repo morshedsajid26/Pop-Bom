@@ -5,6 +5,7 @@ import Link from "next/link";
 import Password from "@/app/component/Password";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { API_BASE_URL } from "@/app/config/api";
 
 
 const NewPass = () => {
@@ -55,7 +56,7 @@ const NewPass = () => {
     setLoading(true);
 
     const response = await axios.post(
-      "http://172.252.13.97:5000/api/auth/admin/reset-password",
+      `${API_BASE_URL}/api/auth/admin/reset-password`,
       {
         email: email,
         newPassword: formData.password, // ✅ ONLY ONE FIELD

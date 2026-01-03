@@ -2,6 +2,7 @@
 import Bredcumb from "@/app/component/Bredcumb";
 import Pagination from "@/app/component/Pagination";
 import Table from "@/app/component/Table";
+import { API_BASE_URL } from "@/app/config/api";
 import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 
@@ -26,7 +27,7 @@ const Users = () => {
 
         const accesstoken = Cookies.get("accessToken");
 
-        const res = await fetch("http://172.252.13.97:5000/api/admin/users", {
+        const res = await fetch(`${API_BASE_URL}/api/admin/users`, {
           credentials: "include",
           method: "GET",
           headers: {
