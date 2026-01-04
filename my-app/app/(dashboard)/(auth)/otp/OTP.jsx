@@ -17,27 +17,22 @@ const OTP = () => {
   const [error, setError] = useState("");
 
   const handleChange = (e, index) => {
-  const value = e.target.value.replace(/[^0-9]/g, "");
+    const value = e.target.value.replace(/[^0-9]/g, "");
 
-  const newOtp = [...otp];
-  newOtp[index] = value;
-  setOtp(newOtp);
+    const newOtp = [...otp];
+    newOtp[index] = value;
+    setOtp(newOtp);
 
-  if (value && index < 5) {
-    inputs.current[index + 1]?.focus();
-  }
-};
-
+    if (value && index < 5) {
+      inputs.current[index + 1]?.focus();
+    }
+  };
 
   const handleKeyDown = (e, index) => {
     if (e.key === "Backspace" && !otp[index] && index > 0) {
       inputs.current[index - 1].focus();
     }
   };
-
-  // useEffect(() => {
-  //   axios.defaults.withCredentials = true;
-  // }, []);
 
   useEffect(() => {
     const storedEmail = sessionStorage.getItem("resetEmail");
@@ -70,7 +65,6 @@ const OTP = () => {
           otp: finalOtp,
         },
         {
-          // withCredentials: true,
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
