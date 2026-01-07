@@ -16,7 +16,7 @@ const months = [
   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
 ];
 
-// 🔹 helper: month-wise user count (year based)
+//  helper: month-wise user count (year based)
 const generateMonthlyUserData = (users, year) => {
   const monthCount = months.reduce((acc, m) => {
     acc[m] = 0;
@@ -28,7 +28,7 @@ const generateMonthlyUserData = (users, year) => {
 
     const date = new Date(user.createdAt);
 
-    // 🔥 year filter
+    //  year filter
     if (String(date.getFullYear()) !== String(year)) return;
 
     const monthName = months[date.getMonth()];
@@ -78,7 +78,7 @@ export default function UserChart({ year }) {
     fetchUsers();
   }, []);
 
-  // 🔹 year change হলে chart update
+  
   useEffect(() => {
     if (users.length && year) {
       const monthlyData = generateMonthlyUserData(users, year);

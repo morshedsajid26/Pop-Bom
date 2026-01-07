@@ -21,9 +21,9 @@ const InputField = ({
 
       <input
         type="text"
-        name={name}                         // ✅ ADD THIS
+        name={name}                        
         placeholder={placeholder}
-        value={value ?? ""}                // ✅ safe controlled
+        value={value ?? ""}                
         onChange={readOnly ? undefined : onChange}
         readOnly={readOnly}
         className={`bg-[#F3F3F5] outline-none p-3 text-[#0A0A0A] 

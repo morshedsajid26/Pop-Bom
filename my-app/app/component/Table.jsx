@@ -5,7 +5,7 @@ export default function Table({
   TableRows,
   headClass,
   tableClass,
-   onStatusChange,
+  onStatusChange,
 }) {
   return (
     <table
@@ -18,9 +18,7 @@ export default function Table({
             <th
               key={idx}
               className={`p-5 -2xl font-inter text-left text-[18px] font-medium bg-[#2DDE7F]/30  text-[#0A0A0A]
-                ${
-                  idx === TableHeads.length - 1 ? "" : ""
-                } ${headClass}`}
+                ${idx === TableHeads.length - 1 ? "" : ""} ${headClass}`}
               style={{ width: head.width }}
             >
               {head.Title}
@@ -41,9 +39,9 @@ export default function Table({
                 {/* If render function exists, use it — otherwise show plain data */}
                 {head.render
                   ? head.render(
-                      row[head.key], // 👈 VALUE (e.g. "Active")
-                      row,           // 👈 FULL ROW
-                      onStatusChange // 👈 HANDLER
+                      row[head.key], 
+                      row, 
+                      onStatusChange 
                     )
                   : row[head.key]}
               </td>
